@@ -1,7 +1,8 @@
 import functools
 import time
 
-def timed_lru_cache(seconds: int=300):
+
+def timed_lru_cache(seconds: int = 300):
     def wrapper(func):
         @functools.lru_cache()
         def cached_func(*args, **kwargs):
@@ -16,5 +17,7 @@ def timed_lru_cache(seconds: int=300):
             result = func(*args, **kwargs)
             cached_func.cache[args] = (result, now)
             return result
+
         return cached_func
+
     return wrapper
