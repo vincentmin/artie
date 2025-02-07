@@ -26,6 +26,17 @@ async def main(message: cl.Message):
             # system_instruction="You are a helpful assistant",
         ),
     )
-
-    await cl.Message(content=response.text).send()
+    try:
+        elements = [
+            cl.Text(
+                name="sources",
+                content=response.candidates[
+                    0
+                ].grounding_metadata.search_entry_point.rendered_content,
+                display="inline",
+            )
+        ]
+    except Exception:
+        elements = []
+    await cl.Message(content=response.text, elements=elements).send()
     # response.candidates[0].grounding_metadata.search_entry_point.rendered_content
