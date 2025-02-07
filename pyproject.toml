@@ -1,0 +1,23 @@
+[project]
+name = "open-data-chatbot"
+version = "0.1.0"
+description = "A chatbot on open data"
+readme = "README.md"
+authors = [{name = "Vincent Min", email = "vincentmin17@gmail.com"}]
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+]
+
+[tool.hatch.build.targets.wheel]
+    packages = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.3",
+    "pytest>=8.3.4",
+]
