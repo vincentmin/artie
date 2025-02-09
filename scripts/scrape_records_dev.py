@@ -4,17 +4,17 @@ from tqdm.auto import tqdm
 import pandas as pd
 
 params = {
-    "verb": "ListRecords",
+    "verb": "ListIdentifiers",
     "metadataPrefix": "edm",
 }
 
 namespaces = {
     "oai": "http://www.openarchives.org/OAI/2.0/",
-    "dc": "http://purl.org/dc/elements/1.1/",
-    "dcterms": "http://purl.org/dc/terms/",
-    "edm": "http://www.europeana.eu/schemas/edm/",
-    "svcs": "http://rdfs.org/sioc/services/",
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    # "dc": "http://purl.org/dc/elements/1.1/",
+    # "dcterms": "http://purl.org/dc/terms/",
+    # "edm": "http://www.europeana.eu/schemas/edm/",
+    # "svcs": "http://rdfs.org/sioc/services/",
+    # "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 }
 
 csv_header_written = False  # Flag to track if header has been written
@@ -32,46 +32,32 @@ with httpx.Client() as client:
         while True:
             tree = lxml.etree.fromstring(response.content)
 
-            batch = tree.xpath(".//oai:record", namespaces=namespaces)
+            batch = tree.xpath(".//oai:header", namespaces=namespaces)
             records = []
 
             for i, record in enumerate(batch):
                 object_id = record.xpath(
                     ".//oai:identifier/text()", namespaces=namespaces
                 ) or [None]
-                title = record.xpath(".//dc:title/text()", namespaces=namespaces) or [
-                    None
-                ]
-                description = record.xpath(
-                    ".//dc:description/text()", namespaces=namespaces
+                datestamp = record.xpath(
+                    ".//oai:datestamp/text()", namespaces=namespaces
                 ) or [None]
-                image_url = (
-                    record.xpath(
-                        ".//edm:object/edm:WebResource/@rdf:about",
-                        namespaces=namespaces,
-                    )
-                    or record.xpath(
-                        ".//edm:object/@rdf:resource", namespaces=namespaces
-                    )
-                    or [None]
-                )
-                artist = record.xpath(
-                    ".//dc:creator/@rdf:resource", namespaces=namespaces
-                ) or [None]
+                set_spec = record.xpath(".//oai:setSpec/text()", namespaces=namespaces)
 
                 records.append(
                     dict(
-                        original_id=object_id[0],
-                        image_url=image_url[0],
-                        long_title=title[0],
-                        description=description[0],
-                        artist=artist[0],
+                        object_id=object_id[0],
+                        datestamp=datestamp[0],
+                        set_spec=set_spec,
                     )
                 )
 
             df_batch = pd.DataFrame(records)
             df_batch.to_csv(
-                "data/records.csv", mode="a", header=not csv_header_written, index=False
+                "data/bare_records.csv",
+                mode="a",
+                header=not csv_header_written,
+                index=False,
             )
             csv_header_written = True
 
@@ -82,7 +68,7 @@ with httpx.Client() as client:
             )
             if resumption_token_list:
                 params = {
-                    "verb": "ListRecords",
+                    "verb": "ListIdentifiers",
                     "resumptionToken": resumption_token_list[0],
                 }
                 response = client.get("https://data.rijksmuseum.nl/oai", params=params)
