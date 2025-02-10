@@ -1,3 +1,4 @@
+import json
 import httpx
 import lxml.etree
 from tqdm.auto import tqdm
@@ -15,6 +16,12 @@ namespaces = {
     "edm": "http://www.europeana.eu/schemas/edm/",
     "svcs": "http://rdfs.org/sioc/services/",
     "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdaGr2": "http://rdvocab.info/ElementsGr2/",
+    "ore": "http://www.openarchives.org/ore/terms/",
+    "edmfp": "http://www.europeanafashion.eu/edmfp/",
+    "mrel": "http://id.loc.gov/vocabulary/relators/",
 }
 
 csv_header_written = False  # Flag to track if header has been written
@@ -55,19 +62,31 @@ with httpx.Client() as client:
                     )
                     or [None]
                 )
-                artist = record.xpath(
+                artist_uri = record.xpath(
                     ".//dc:creator/@rdf:resource", namespaces=namespaces
                 ) or [None]
 
-                records.append(
-                    dict(
-                        original_id=object_id[0],
-                        image_url=image_url[0],
-                        long_title=title[0],
-                        description=description[0],
-                        artist=artist[0],
+                author_name = None
+                if artist_uri and artist_uri[0]:
+                    author_description_element = record.xpath(
+                        f".//rdf:Description[@rdf:about='{artist_uri[0]}']",
+                        namespaces=namespaces,
                     )
+                    if author_description_element:
+                        author_name_list = author_description_element[0].xpath(
+                            "./skos:prefLabel/text()", namespaces=namespaces
+                        )
+                        author_name = author_name_list[0] if author_name_list else None
+
+                data = dict(
+                    original_id=object_id[0],
+                    image_url=image_url[0],
+                    long_title=title[0],
+                    description=description[0],
+                    artist_uri=artist_uri[0],
+                    author_name=author_name,
                 )
+                records.append(data)
 
             df_batch = pd.DataFrame(records)
             df_batch.to_csv(
