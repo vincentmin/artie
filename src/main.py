@@ -14,6 +14,7 @@ model_id = "gemini-2.0-flash-001"
 # for user
 side_bar_prompt = """Here's the art piece we are discussing today:
 
+- **Title**: {title}
 - **Author**: {author_name}
 - **Description**: {description}
 
@@ -22,6 +23,7 @@ Here is the image of the art piece. You can click on it to enlarge it."""
 # for llm
 init_conversation_prompt = """Here's the art piece we are discussing today:
 
+- **Title**: {title}
 - **Author**: {author_name}
 - **Description**: {description}
 - **Image url**: {image_url}
@@ -56,6 +58,7 @@ ds = iter(
 class Record(TypedDict):
     original_id: str
     image_url: str
+    long_title: str
     description: str
     artist_uri: str
     author_name: str
@@ -110,7 +113,9 @@ async def llm(
 
 async def display_sidebar(record: Record):
     text = side_bar_prompt.format(
-        author_name=record["author_name"], description=record["description"]
+        title=record["long_title"],
+        author_name=record["author_name"],
+        description=record["description"],
     )
     elements = [
         cl.Text(content=text, name="art piece", display="side"),
@@ -122,6 +127,7 @@ async def display_sidebar(record: Record):
 
 async def initiate_conversation(record: Record):
     text = init_conversation_prompt.format(
+        title=record["long_title"],
         author_name=record["author_name"],
         description=record["description"],
         image_url=record["image_url"],
