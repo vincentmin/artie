@@ -29,7 +29,7 @@ latex = false
 auto_tag_thread = true
 
 # Allow users to edit their own messages
-edit_message = true
+edit_message = false
 
 # Authorize users to spontaneously upload files with messages
 [features.spontaneous_file_upload]
@@ -53,20 +53,20 @@ edit_message = true
 
 [UI]
 # Name of the assistant.
-name = "Assistant"
+name = "Artie"
 
 # default_theme = "dark"
 
 # layout = "wide"
 
 # Description of the assistant. This is used for HTML tags.
-# description = ""
+description = "A chatbot on art pieces from the Rijks museum"
 
 # Chain of Thought (CoT) display mode. Can be "hidden", "tool_call" or "full".
 cot = "full"
 
 # Link to your github repo. This will add a github button in the UI's header.
-# github = ""
+github = "https://github.com/vincentmin/open-data-chatbot"
 
 # Specify a CSS file that can be used to customize the user interface.
 # The CSS file can be served from the public directory or via an external link.
@@ -77,7 +77,7 @@ cot = "full"
 # custom_js = "/public/test.js"
 
 # Specify a custom meta image url.
-# custom_meta_image_url = "https://chainlit-cloud.s3.eu-west-3.amazonaws.com/logo/chainlit_banner.png"
+custom_meta_image_url = "https://iiif.micr.io/dVyzq/0,1127,8560,4387/2880,1476/0/default.png"
 
 # Specify a custom build directory for the frontend.
 # This can be used to customize the frontend code.
