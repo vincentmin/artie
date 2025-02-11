@@ -1,14 +1,18 @@
-# Welcome to Artie! 🚀🤖
+# Welcome to Artie!
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Have a chat with Artie and explore the art world together.
+With each conversation, Artie will take you on a journey into a random art piece from the Rijks Museum.
+Talk about the history that lies behind an object, discuss the events that led the artist to create this painting, or ask Artie what he thinks about a particular feature of the image.
+Artie is here to discover the Rijks Museum together with you.
 
-## Useful Links 🔗
+## About
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+Observing art by myself can be nice, but experiencing a piece with friends or family often makes me see things that I would never have spotted by myself. My father, who was an artist himself, would take me to musea and tell me about the background, history and context of art pieces. I was fortunate to have such a knowledgeable guide to teach me all these wondrous things. With Artie, I tried to make such an experience accessible to anyone.
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+## Technologies
 
-## Welcome screen
+I used the following excellent technologies to build this experience:
 
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+- [Rijks Museum OAI-PMH API](https://data.rijksmuseum.nl/docs/) The art pieces that you can discover with Artie originate from the Rijks Museum data API. Thanks so much to the Rijks Museum for making this so freely accessible!
+- [Google Gemini](https://deepmind.google/technologies/gemini/flash/): Google's Gemini Flash 2.0 model is the LLM that powers Artie. The model can also use Google Search to look up any information that it may need.
+- [Chainlit](https://github.com/Chainlit/chainlit): This was used to build the frontend to the application.
