@@ -10,6 +10,24 @@ from google.genai.chats import AsyncChat
 
 client = genai.Client()
 model_id = "gemini-2.0-flash-001"
+
+# for user
+side_bar_prompt = """Here's the art piece we are discussing today:
+
+- **Author**: {author_name}
+- **Description**: {description}
+
+Here is the image of the art piece. You can click on it to enlarge it."""
+
+# for llm
+init_conversation_prompt = """Here's the art piece we are discussing today:
+
+- **Author**: {author_name}
+- **Description**: {description}
+- **Image url**: {image_url}
+
+Here is the image of the art piece."""
+
 system_prompt = """You are a highly knowledgable and extravert art director.
 Your job is to entertain the user by highlighting interesting aspects
 of the selected art piece and provoke an engaging conversation.
@@ -31,7 +49,7 @@ google_search_tool = Tool(google_search=GoogleSearch())
 ds = iter(
     load_dataset("vincentmin/rijksmuseum-oai", streaming=True, split="train")
     .shuffle()
-    .filter(lambda record: not any(v is None for v in record.items()))
+    .filter(lambda record: not any(v is None for v in record.values()))
 )
 
 
@@ -90,24 +108,41 @@ async def llm(
     return response, elements
 
 
+async def display_sidebar(record: Record):
+    text = side_bar_prompt.format(
+        author_name=record["author_name"], description=record["description"]
+    )
+    elements = [
+        cl.Text(content=text, name="art piece", display="side"),
+        cl.Image(url=record["image_url"], name="image", display="side"),
+    ]
+    await cl.ElementSidebar.set_elements(elements)
+    await cl.ElementSidebar.set_title("Art Piece")
+
+
+async def initiate_conversation(record: Record):
+    text = init_conversation_prompt.format(
+        author_name=record["author_name"],
+        description=record["description"],
+        image_url=record["image_url"],
+    )
+    image = await load_image(record["image_url"])
+    response, elements = await llm([text, image])
+    await cl.Message(content=response.text, elements=elements).send()
+
+
 @cl.on_chat_start
 async def on_chat_start():
-    # fetch random record for user
-    record: Record = next(ds)
-    print(record)
-    # load image
-    image = await load_image(record["image_url"])
     # instantiate chat session to keep track of conversation
     chat = client.aio.chats.create(model=model_id)
     cl.user_session.set("chat", chat)
-    # Have the LLM ininitate the conversation
-    text = "Here's the art piece we are discussing today:"
-    text += f"\nAuthor: {record['author_name']}"
-    text += f"\nDescription: {record['description']}"
-    text += f"\nImage url: {record['image_url']}"
-    text += "\nHere is the image of the art piece"
-    response, elements = await llm([text, image])
-    await cl.Message(content=response.text, elements=elements).send()
+
+    # fetch random record for user
+    record: Record = next(ds)
+    print(record)
+
+    await display_sidebar(record)
+    await initiate_conversation(record)
 
 
 @cl.on_message
