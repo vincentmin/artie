@@ -1,11 +1,17 @@
-from typing import TypedDict
+from typing import TypedDict, cast
 from PIL import Image
 import aiohttp
 import io
 import chainlit as cl
 from datasets import load_dataset
 from google import genai
-from google.genai.types import Tool, GenerateContentConfig, GoogleSearch, PartUnionDict
+from google.genai.types import (
+    Tool,
+    GenerateContentConfig,
+    GoogleSearch,
+    PartUnionDict,
+    GenerateContentResponse,
+)
 from google.genai.chats import AsyncChat
 
 client = genai.Client()
@@ -86,29 +92,30 @@ async def respond(
     # Fetch chat session for current user
     chat: AsyncChat = cl.user_session.get("chat")
     system_instruction = system_instruction or system_prompt
-    response = await chat.send_message(
+    msg = cl.Message(content="")
+    async for chunk in await chat.send_message_stream(
         message=text,
         config=GenerateContentConfig(
             tools=[google_search_tool],
             response_modalities=["TEXT"],
             system_instruction=system_instruction,
         ),
-    )
+    ):
+        chunk = cast(GenerateContentResponse, chunk)
+        await msg.stream_token(chunk.text)
+
     # Display grounding context as elements.
-    try:
-        elements = [
-            cl.Text(
-                name="sources",
-                content=response.candidates[
-                    0
-                ].grounding_metadata.search_entry_point.rendered_content,
-                display="inline",
-            )
-        ]
-    except Exception:
-        elements = []
-    print(response.text)
-    await cl.Message(content=response.text, elements=elements).send()
+    elements = []
+    for candidate in chunk.candidates:
+        if (
+            (c := candidate.grounding_metadata)
+            and (sep := c.search_entry_point)
+            and (rc := sep.rendered_content)
+        ):
+            print("Rendered content:", rc)
+            elements.append(cl.Text(name="sources", content=rc, display="inline"))
+    msg.elements = elements
+    await msg.send()
 
 
 async def display_sidebar(record: Record):
