@@ -1,8 +1,11 @@
 from typing import TypedDict
+from PIL import Image
+import aiohttp
+import io
 import chainlit as cl
 from datasets import load_dataset
 from google import genai
-from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
+from google.genai.types import Tool, GenerateContentConfig, GoogleSearch, PartUnionDict
 from google.genai.chats import AsyncChat
 
 client = genai.Client()
@@ -40,13 +43,30 @@ class Record(TypedDict):
     author_name: str
 
 
-async def llm(text: str, system_instruction: str | None = None):
+async def _load_image(url: str) -> Image.Image:
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            image_bytes = await response.read()
+            image = Image.open(io.BytesIO(image_bytes))
+            return image
+
+
+async def load_image(url: str) -> Image.Image:
+    """Load an image in 512px resolution keeping the aspect ratio"""
+    return await _load_image(
+        url.replace("/full/max/0/default.jpg", "/full/512,/0/default.jpg")
+    )
+
+
+async def llm(
+    text: PartUnionDict | list[PartUnionDict],
+    system_instruction: str | None = None,
+):
     # Fetch chat session for current user
     chat: AsyncChat = cl.user_session.get("chat")
-
     system_instruction = system_instruction or system_prompt
     response = await chat.send_message(
-        contents=text,
+        message=text,
         config=GenerateContentConfig(
             tools=[google_search_tool],
             response_modalities=["TEXT"],
@@ -74,13 +94,19 @@ async def llm(text: str, system_instruction: str | None = None):
 async def on_chat_start():
     # fetch random record for user
     record: Record = next(ds)
+    print(record)
+    # load image
+    image = await load_image(record["image_url"])
     # instantiate chat session to keep track of conversation
-    chat = client.aio.chats.create(model_id)
+    chat = client.aio.chats.create(model=model_id)
     cl.user_session.set("chat", chat)
     # Have the LLM ininitate the conversation
-    response, elements = await llm(
-        f"Here's the art piece we are discussing today: {record}"
-    )
+    text = "Here's the art piece we are discussing today:"
+    text += f"\nAuthor: {record['author_name']}"
+    text += f"\nDescription: {record['description']}"
+    text += f"\nImage url: {record['image_url']}"
+    text += "\nHere is the image of the art piece"
+    response, elements = await llm([text, image])
     await cl.Message(content=response.text, elements=elements).send()
 
 
