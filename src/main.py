@@ -114,7 +114,6 @@ async def respond(
             and (sep := c.search_entry_point)
             and (rc := sep.rendered_content)
         ):
-            print("Rendered content:", rc)
             elements.append(cl.Text(name="sources", content=rc, display="inline"))
     msg.elements = elements
 
@@ -152,9 +151,8 @@ async def on_chat_start():
     chat = client.aio.chats.create(model=model_id)
     cl.user_session.set("chat", chat)
 
-    # fetch random record for user
+    # fetch random record
     record: Record = next(ds)
-    print(record)
 
     await display_sidebar(record)
     await initiate_conversation(record)
