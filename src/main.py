@@ -79,7 +79,7 @@ async def load_image(url: str) -> Image.Image:
     )
 
 
-async def llm(
+async def respond(
     text: PartUnionDict | list[PartUnionDict],
     system_instruction: str | None = None,
 ):
@@ -108,7 +108,7 @@ async def llm(
     except Exception:
         elements = []
     print(response.text)
-    return response, elements
+    await cl.Message(content=response.text, elements=elements).send()
 
 
 async def display_sidebar(record: Record):
@@ -133,8 +133,7 @@ async def initiate_conversation(record: Record):
         image_url=record["image_url"],
     )
     image = await load_image(record["image_url"])
-    response, elements = await llm([text, image])
-    await cl.Message(content=response.text, elements=elements).send()
+    await respond([text, image])
 
 
 @cl.on_chat_start
@@ -153,5 +152,4 @@ async def on_chat_start():
 
 @cl.on_message
 async def main(message: cl.Message):
-    response, elements = await llm(message.content)
-    await cl.Message(content=response.text, elements=elements).send()
+    await respond(message.content)
