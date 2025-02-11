@@ -92,6 +92,8 @@ async def respond(
     # Fetch chat session for current user
     chat: AsyncChat = cl.user_session.get("chat")
     system_instruction = system_instruction or system_prompt
+
+    # Stream response
     msg = cl.Message(content="")
     async for chunk in await chat.send_message_stream(
         message=text,
@@ -115,6 +117,7 @@ async def respond(
             print("Rendered content:", rc)
             elements.append(cl.Text(name="sources", content=rc, display="inline"))
     msg.elements = elements
+
     await msg.send()
 
 
