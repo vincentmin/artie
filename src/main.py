@@ -3,6 +3,7 @@ import chainlit as cl
 from datasets import load_dataset
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
+from google.genai.chats import AsyncChat
 
 client = genai.Client()
 model_id = "gemini-2.0-flash-001"
@@ -40,9 +41,11 @@ class Record(TypedDict):
 
 
 async def llm(text: str, system_instruction: str | None = None):
+    # Fetch chat session for current user
+    chat: AsyncChat = cl.user_session.get("chat")
+
     system_instruction = system_instruction or system_prompt
-    response = await client.aio.models.generate_content(
-        model=model_id,
+    response = await chat.send_message(
         contents=text,
         config=GenerateContentConfig(
             tools=[google_search_tool],
@@ -50,6 +53,7 @@ async def llm(text: str, system_instruction: str | None = None):
             system_instruction=system_instruction,
         ),
     )
+    # Display grounding context as elements.
     try:
         elements = [
             cl.Text(
@@ -68,7 +72,12 @@ async def llm(text: str, system_instruction: str | None = None):
 
 @cl.on_chat_start
 async def on_chat_start():
+    # fetch random record for user
     record: Record = next(ds)
+    # instantiate chat session to keep track of conversation
+    chat = client.aio.chats.create(model_id)
+    cl.user_session.set("chat", chat)
+    # Have the LLM ininitate the conversation
     response, elements = await llm(
         f"Here's the art piece we are discussing today: {record}"
     )
