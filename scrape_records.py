@@ -1,3 +1,11 @@
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "lxml",
+#     "pandas",
+#     "tqdm",
+# ]
+# ///
 import json
 import httpx
 import lxml.etree
