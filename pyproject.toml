@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Discuss Rijks Museum art pieces with Artie"
 readme = "README.md"
 authors = [{name = "Vincent Min", email = "vincentmin17@gmail.com"}]
-license = "MIT"
 requires-python = ">=3.12"
 dependencies = [
     "chainlit>=2.1.2",
