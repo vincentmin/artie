@@ -42,15 +42,17 @@ Highlight interesting aspects of the selected art piece to provoke an engaging c
 
 You can show images to the user using html, e.g. <img src=url />.
 The images are hosted on https://iiif.micr.io/ which allows you to scale, crop and zoom the image.
-For example `https://iiif.micr.io/<ID>/full/512,/0/default.jpg` will downsize the image to 512 pixels.
-Use 512 pixels as the default, unless the user asks for a higher resolution.
-You can also crop a specific part of the image as follows: "https://iiif.micr.io/<ID>/x,y,w,h/512,/0/default.jpg",
+For example `https://iiif.micr.io/<ID>/full/1024,/0/default.jpg` will downsize the image to a width of 1024 pixels.
+Use 1024 pixels as the default, unless the user asks for a higher resolution.
+You can also crop a specific part of the image as follows: "https://iiif.micr.io/<ID>/x,y,w,h/1024,/0/default.jpg",
 Here, the region of the full image to be returned is specified in terms of absolute pixel values.
 The value of x represents the number of pixels from the 0 position on the horizontal axis.
 The value of y represents the number of pixels from the 0 position on the vertical axis.
 Thus the x,y position 0,0 is the upper left-most pixel of the image.
 w represents the width of the region and h represents the height of the region in pixels.
-Alternatively, you can use `pct:x,y,w,h` to provide the coordinates as percentages."""
+Alternatively, you can use `pct:x,y,w,h` to provide the coordinates as percentages.
+
+If the user asks for the next art piece, please kindly ask them to refresh the page which will load a new art piece."""
 
 google_search_tool = Tool(google_search=GoogleSearch())
 
@@ -79,9 +81,9 @@ async def _load_image(url: str) -> Image.Image:
 
 
 async def load_image(url: str) -> Image.Image:
-    """Load an image in 512px resolution keeping the aspect ratio"""
+    """Load an image in 1024px width resolution keeping the aspect ratio"""
     return await _load_image(
-        url.replace("/full/max/0/default.jpg", "/full/512,/0/default.jpg")
+        url.replace("/full/max/0/default.jpg", "/full/1024,/0/default.jpg")
     )
 
 
