@@ -147,6 +147,16 @@ async def initiate_conversation(record: Record):
     await respond([text, image])
 
 
+@cl.oauth_callback
+def oauth_callback(
+    provider_id: str,
+    token: str,
+    raw_user_data: dict[str, str],
+    default_user: cl.User,
+) -> cl.User | None:
+    return default_user
+
+
 @cl.on_chat_start
 async def on_chat_start():
     # instantiate chat session to keep track of conversation
