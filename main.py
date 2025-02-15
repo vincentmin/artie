@@ -32,6 +32,11 @@ async def chat_profile():
             markdown_description="Talk to Artie about art pieces from the MOMA",
             icon="https://picsum.photos/250",
         ),
+        cl.ChatProfile(
+            name="Tate",
+            markdown_description="Talk to Artie about art pieces from the Tate",
+            icon="https://picsum.photos/300",
+        ),
     ]
 
 
