@@ -59,21 +59,29 @@ class MomaRecord(BaseRecord):
         return self.ImageURL
 
 
-@dataclass
-class MomaConfig(BaseConfig):
-    dataset: Iterator[MomaRecord] = iter(
-        MomaRecord.from_dict(record)
-        for record in load_dataset("vincentmin/moma", streaming=True, split="train")
-        .shuffle()
-        .filter(
-            lambda record: (
-                record.get("Title", False)
-                and record.get("Artist", False)
-                and record.get("ImageURL", False)
-                and record.get("URL", False)
+def dataset() -> Iterator[MomaRecord]:
+    """We need to loop infinitely to avoid StopIteration errors"""
+    while True:
+        finite_dataset: Iterator[MomaRecord] = iter(
+            MomaRecord.from_dict(record)
+            for record in load_dataset("vincentmin/moma", streaming=True, split="train")
+            .shuffle()
+            .filter(
+                lambda record: (
+                    record.get("Title", False)
+                    and record.get("Artist", False)
+                    and record.get("ImageURL", False)
+                    and record.get("URL", False)
+                )
             )
         )
-    )
+        for record in finite_dataset:
+            yield record
+
+
+@dataclass
+class MomaConfig(BaseConfig):
+    dataset: Iterator[MomaRecord] = dataset()
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt

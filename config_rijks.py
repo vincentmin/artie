@@ -8,7 +8,7 @@ from config_base import BaseConfig, BaseRecord
 # for user
 side_bar_prompt = """Here's the art piece from the Rijks Musem we are discussing today:
 
-- **Title**: {long_title}
+- **Title**: {title}
 - **Artist**: [{author_name}]({artist_uri})
 - **Description**: {description}
 - **Rijks Museum link**: {original_id}
@@ -18,7 +18,7 @@ Here is the image of the art piece. You can click on it to enlarge it."""
 # for llm
 init_conversation_prompt = """Here's the art piece we are discussing today:
 
-- **Title**: {long_title}
+- **Title**: {title}
 - **Artist**: {author_name}
 - **Description**: {description}
 - **Image url**: {image_url}
@@ -49,7 +49,7 @@ If the user asks for the next art piece, please kindly ask them to refresh the p
 class RijksRecord(BaseRecord):
     original_id: str
     image_url: str
-    long_title: str
+    title: str
     description: str
     artist_uri: str
     author_name: str
@@ -59,16 +59,31 @@ class RijksRecord(BaseRecord):
         return self.image_url
 
 
+def dataset() -> Iterator[RijksRecord]:
+    """We need to loop infinitely to avoid StopIteration errors"""
+    while True:
+        finite_dataset: Iterator[RijksRecord] = iter(
+            RijksRecord.from_dict(record)
+            for record in load_dataset(
+                "vincentmin/rijksmuseum-oai", streaming=True, split="train"
+            )
+            .shuffle()
+            .filter(
+                lambda record: (
+                    record.get("Title", False)
+                    and record.get("Artist", False)
+                    and record.get("ImageURL", False)
+                    and record.get("URL", False)
+                )
+            )
+        )
+        for record in finite_dataset:
+            yield record
+
+
 @dataclass
 class RijksConfig(BaseConfig):
-    dataset: Iterator[RijksRecord] = iter(
-        RijksRecord.from_dict(record)
-        for record in load_dataset(
-            "vincentmin/rijksmuseum-oai", streaming=True, split="train"
-        )
-        .shuffle()
-        .filter(lambda record: not any(v is None for v in record.values()))
-    )
+    dataset: Iterator[RijksRecord] = dataset()
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt
