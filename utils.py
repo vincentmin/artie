@@ -9,15 +9,19 @@ from config_base import BaseRecord, BaseConfig
 from config_moma import MomaConfig
 from config_rijks import RijksConfig
 
+# Instantiate configs only once for memory efficiency
+rijks_config = RijksConfig()
+moma_config = MomaConfig()
 
-def get_config(chat_profile: str) -> BaseConfig:
+
+def get_config(chat_profile: str | None) -> BaseConfig:
     match chat_profile:
         case None:
-            return RijksConfig()
+            return rijks_config
         case "Rijks Museum":
-            return RijksConfig()
+            return rijks_config
         case "MOMA":
-            return MomaConfig()
+            return moma_config
         case _:
             raise ValueError(f"Invalid chat_profile: {chat_profile}")
 
