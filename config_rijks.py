@@ -9,7 +9,7 @@ from config_base import BaseConfig, BaseRecord
 side_bar_prompt = """Here's the art piece from the Rijks Musem we are discussing today:
 
 - **Title**: {long_title}
-- **Author**: [{author_name}]({artist_uri})
+- **Artist**: [{author_name}]({artist_uri})
 - **Description**: {description}
 - **Rijks Museum link**: {original_id}
 
@@ -19,7 +19,7 @@ Here is the image of the art piece. You can click on it to enlarge it."""
 init_conversation_prompt = """Here's the art piece we are discussing today:
 
 - **Title**: {long_title}
-- **Author**: {author_name}
+- **Artist**: {author_name}
 - **Description**: {description}
 - **Image url**: {image_url}
 

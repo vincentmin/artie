@@ -9,7 +9,7 @@ from config_base import BaseConfig, BaseRecord
 side_bar_prompt = """Here's the art piece we are discussing today:
 
 - **Title**: {Title}
-- **Author**: {Artist}
+- **Artist**: {Artist}
 - **MOMA link**: {URL}
 
 Here is the image of the art piece. You can click on it to enlarge it."""
@@ -18,7 +18,7 @@ Here is the image of the art piece. You can click on it to enlarge it."""
 init_conversation_prompt = """Here's the art piece we are discussing today:
 
 - **Title**: {Title}
-- **Author**: {Author}
+- **Artist**: {Artist}
 - **Image url**: {ImageURL}
 
 Here is the image of the art piece."""
@@ -40,7 +40,7 @@ class MomaRecord(BaseRecord):
     BeginDate: list[str]
     EndDate: list[str]
     Gender: list[str]
-    Date: int
+    Date: str
     Medium: str
     Dimensions: str
     CreditLine: str
@@ -65,7 +65,14 @@ class MomaConfig(BaseConfig):
         MomaRecord.from_dict(record)
         for record in load_dataset("vincentmin/moma", streaming=True, split="train")
         .shuffle()
-        .filter(lambda record: not any(v is None for v in record.values()))
+        .filter(
+            lambda record: (
+                record.get("Title", False)
+                and record.get("Artist", False)
+                and record.get("ImageURL", False)
+                and record.get("URL", False)
+            )
+        )
     )
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
