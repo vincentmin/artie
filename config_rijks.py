@@ -9,7 +9,7 @@ from config_base import BaseConfig, BaseRecord
 side_bar_prompt = """Here's the art piece from the Rijks Musem we are discussing today:
 
 - **Title**: {title}
-- **Artist**: [{author_name}]({artist_uri})
+- **Artist**: [{artist_name}]({artist_uri})
 - **Description**: {description}
 - **Rijks Museum link**: {original_id}
 
@@ -19,7 +19,7 @@ Here is the image of the art piece. You can click on it to enlarge it."""
 init_conversation_prompt = """Here's the art piece we are discussing today:
 
 - **Title**: {title}
-- **Artist**: {author_name}
+- **Artist**: {artist_name}
 - **Description**: {description}
 - **Image url**: {image_url}
 
@@ -52,7 +52,7 @@ class RijksRecord(BaseRecord):
     title: str
     description: str
     artist_uri: str
-    author_name: str
+    artist_name: str
 
     @property
     def img_url(self) -> str:
@@ -68,14 +68,7 @@ def dataset() -> Iterator[RijksRecord]:
                 "vincentmin/rijksmuseum-oai", streaming=True, split="train"
             )
             .shuffle()
-            .filter(
-                lambda record: (
-                    record.get("Title", False)
-                    and record.get("Artist", False)
-                    and record.get("ImageURL", False)
-                    and record.get("URL", False)
-                )
-            )
+            .filter(lambda record: not any(v is None for v in record.values()))
         )
         for record in finite_dataset:
             yield record

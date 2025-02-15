@@ -77,12 +77,12 @@ with httpx.Client() as client:
 
                 artist_name = None
                 if artist_uri and artist_uri[0]:
-                    author_description_element = record.xpath(
+                    artist_description_element = record.xpath(
                         f".//rdf:Description[@rdf:about='{artist_uri[0]}']",
                         namespaces=namespaces,
                     )
-                    if author_description_element:
-                        artist_name_list = author_description_element[0].xpath(
+                    if artist_description_element:
+                        artist_name_list = artist_description_element[0].xpath(
                             "./skos:prefLabel/text()", namespaces=namespaces
                         )
                         artist_name = artist_name_list[0] if artist_name_list else None
