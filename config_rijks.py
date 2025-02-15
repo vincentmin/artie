@@ -43,6 +43,7 @@ x,y,w and h range from 0 to 1.
 If the user asks for the next art piece, please kindly ask them to refresh the page which will load a new art piece."""
 
 
+@dataclass
 class RijksRecord(BaseRecord):
     original_id: str
     image_url: str

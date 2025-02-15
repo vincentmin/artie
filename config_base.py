@@ -1,7 +1,7 @@
-from typing import Iterator, TypedDict
+from typing import Iterator
 
 
-class BaseRecord(TypedDict):
+class BaseRecord:
     @property
     def img_url(self) -> str:
         raise NotImplementedError
