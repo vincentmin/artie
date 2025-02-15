@@ -1,4 +1,5 @@
 from typing import Iterator
+from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
@@ -29,6 +30,7 @@ You can show images to the user using html, e.g. <img src=url />.
 If the user asks for the next art piece, please kindly ask them to refresh the page which will load a new art piece."""
 
 
+@dataclass_json
 @dataclass
 class MomaRecord(BaseRecord):
     Title: str
@@ -54,13 +56,13 @@ class MomaRecord(BaseRecord):
 
     @property
     def img_url(self) -> str:
-        return self["ImageURL"]
+        return self.ImageURL
 
 
 @dataclass
 class MomaConfig(BaseConfig):
     dataset: Iterator[MomaRecord] = iter(
-        MomaRecord(**record)
+        MomaRecord.from_dict(record)
         for record in load_dataset("vincentmin/moma", streaming=True, split="train")
         .shuffle()
         .filter(lambda record: not any(v is None for v in record.values()))

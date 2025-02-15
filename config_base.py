@@ -1,6 +1,10 @@
 from typing import Iterator
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 
 
+@dataclass_json
+@dataclass
 class BaseRecord:
     @property
     def img_url(self) -> str:

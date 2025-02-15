@@ -16,7 +16,7 @@ def get_config(chat_profile: str) -> BaseConfig:
             return RijksConfig()
         case "Rijks Museum":
             return RijksConfig()
-        case "Moma":
+        case "MOMA":
             return MomaConfig()
         case _:
             raise ValueError(f"Invalid chat_profile: {chat_profile}")
@@ -61,7 +61,7 @@ async def respond(text: PartUnionDict | list[PartUnionDict]):
 
 
 async def display_sidebar(record: BaseRecord, prompt: str):
-    text = prompt.format(**record)
+    text = prompt.format(**record.to_dict())
     elements = [
         cl.Text(content=text, name="art piece", display="side"),
         cl.Image(url=record.img_url, name="image", display="side"),
@@ -71,6 +71,6 @@ async def display_sidebar(record: BaseRecord, prompt: str):
 
 
 async def initiate_conversation(record: BaseRecord, prompt: str):
-    text = prompt.format(**record)
+    text = prompt.format(**record.to_dict())
     image = await load_image(record.img_url)
     await respond([text, image])

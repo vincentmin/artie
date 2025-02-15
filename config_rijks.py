@@ -1,5 +1,6 @@
 from typing import Iterator
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
 
@@ -43,6 +44,7 @@ x,y,w and h range from 0 to 1.
 If the user asks for the next art piece, please kindly ask them to refresh the page which will load a new art piece."""
 
 
+@dataclass_json
 @dataclass
 class RijksRecord(BaseRecord):
     original_id: str
@@ -54,13 +56,13 @@ class RijksRecord(BaseRecord):
 
     @property
     def img_url(self) -> str:
-        return self["image_url"]
+        return self.image_url
 
 
 @dataclass
 class RijksConfig(BaseConfig):
     dataset: Iterator[RijksRecord] = iter(
-        RijksRecord(**record)
+        RijksRecord.from_dict(record)
         for record in load_dataset(
             "vincentmin/rijksmuseum-oai", streaming=True, split="train"
         )
