@@ -5,6 +5,7 @@ import io
 import chainlit as cl
 from google.genai.types import PartUnionDict, GenerateContentResponse
 from google.genai.chats import AsyncChat
+from google.genai.errors import APIError
 from config_base import BaseRecord
 
 
@@ -30,9 +31,16 @@ async def respond(text: PartUnionDict | list[PartUnionDict]):
     chat: AsyncChat = cl.user_session.get("chat")
     # Stream response
     msg = cl.Message(content="")
-    async for chunk in await chat.send_message_stream(message=text):
-        chunk = cast(GenerateContentResponse, chunk)
-        await msg.stream_token(chunk.text)
+    try:
+        async for chunk in await chat.send_message_stream(message=text):
+            chunk = cast(GenerateContentResponse, chunk)
+            await msg.stream_token(chunk.text)
+    except APIError:
+        msg.stream_token(
+            "Oopsie. It seems that Artie is very popular today. Please come back later."
+        )
+        await msg.send()
+        return
 
     # Display grounding context as elements.
     elements = []
