@@ -25,17 +25,17 @@ async def chat_profile():
         cl.ChatProfile(
             name="Rijks Museum",
             markdown_description="Praat met Artie over kunstwerken van het Rijks Museum",
-            icon="https://picsum.photos/200",
+            icon="https://iiif.micr.io/PJEZO/pct:0.56,0.48,0.11,0.1325/512,/0/default.jpg",
         ),
         cl.ChatProfile(
             name="MOMA",
             markdown_description="Talk to Artie about art pieces from the MOMA",
-            icon="https://picsum.photos/250",
+            icon="https://iiif.micr.io/PJEZO/pct:0.43,0.45,0.11,0.1325/512,/0/default.jpg",
         ),
         cl.ChatProfile(
             name="Tate",
             markdown_description="Talk to Artie about art pieces from the Tate",
-            icon="https://picsum.photos/300",
+            icon="https://iiif.micr.io/PJEZO/pct:0.275,0.575,0.08,0.0963/512,/0/default.jpg",
         ),
     ]
 
