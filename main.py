@@ -18,14 +18,14 @@ model_id = "gemini-2.0-flash-001"
 google_search_tool = Tool(google_search=GoogleSearch())
 
 
-# @cl.oauth_callback
-# def oauth_callback(
-#     provider_id: str,
-#     token: str,
-#     raw_user_data: dict[str, str],
-#     default_user: cl.User,
-# ) -> cl.User | None:
-#     return default_user
+@cl.oauth_callback
+def oauth_callback(
+    provider_id: str,
+    token: str,
+    raw_user_data: dict[str, str],
+    default_user: cl.User,
+) -> cl.User | None:
+    return default_user
 
 
 @cl.set_chat_profiles
