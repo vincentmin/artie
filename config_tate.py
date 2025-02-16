@@ -6,7 +6,7 @@ from config_base import BaseConfig, BaseRecord
 
 
 # for user
-side_bar_prompt = """Here's the art piece we are discussing today:
+side_bar_prompt = """Here's the art piece from the Tate that we are discussing today:
 
 - **Title**: {title}
 - **Artist**: {artist}
@@ -15,7 +15,7 @@ side_bar_prompt = """Here's the art piece we are discussing today:
 Here is the image of the art piece. You can click on it to enlarge it."""
 
 # for llm
-init_conversation_prompt = """Here's the art piece we are discussing today:
+init_conversation_prompt = """Here's the art piece from the Tate that we are discussing today:
 
 - **Title**: {title}
 - **Artist**: {artist}
@@ -23,7 +23,7 @@ init_conversation_prompt = """Here's the art piece we are discussing today:
 
 Here is the image of the art piece."""
 
-system_prompt = """You are Artie, a highly knowledgable art director who likes to guides users to discover art pieces.
+system_prompt = """You are Artie, a highly knowledgable art director at the Tate who likes to guides users to discover art pieces.
 Your job is to explore an art piece together with the user.
 Highlight interesting aspects of the selected art piece to provoke an engaging conversation.
 You can show images to the user using html, e.g. <img src=url />.
