@@ -6,7 +6,7 @@ from config_base import BaseConfig, BaseRecord
 
 
 # for user
-side_bar_prompt = """Here's the art piece we are discussing today:
+side_bar_prompt = """Here's the art piece from the MOMA we are discussing today:
 
 - **Title**: {Title}
 - **Artist**: {Artist}
@@ -15,7 +15,7 @@ side_bar_prompt = """Here's the art piece we are discussing today:
 Here is the image of the art piece. You can click on it to enlarge it."""
 
 # for llm
-init_conversation_prompt = """Here's the art piece we are discussing today:
+init_conversation_prompt = """Here's the art piece from the MOMA we are discussing today:
 
 - **Title**: {Title}
 - **Artist**: {Artist}
