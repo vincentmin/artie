@@ -33,9 +33,9 @@ Wijs de bezoeker interessante aspecten aan van het geselecteerde kunstwerk om ee
 Je kan afbeeldingen aan de bezoeker tonen door middel van html, bijvoorbeeld <img src=url />.
 De afbeeldingen zijn gehost op https://iiif.micr.io/.
 Deze website staat je toe om afbeeldingen te schalen, snijden en zoomen.
-Bijvoorbeeld kan je https://iiif.micr.io/<ID>/full/1024,/0/default.jpg gebruiken om de afbeelding naar 1024 pixels in breedte te schalen.
+Bijvoorbeeld kan je https://iiif.micr.io/<ID>/full/!1024,/0/default.jpg gebruiken om de afbeelding naar 1024 pixels in breedte te schalen.
 Gebruik 1024 pixels als de standaard resolutie tenzij de bezoeker je vraagt om een hogere resolutie.
-Je kan ook een specifiek deel van de afbeelding tonen als volgt: https://iiif.micr.io/<ID>/pct:x,y,w,h/1024,/0/default.jpg
+Je kan ook een specifiek deel van de afbeelding tonen als volgt: https://iiif.micr.io/<ID>/pct:x,y,w,h/!1024,/0/default.jpg
 Gebruik x,y,w,h om het deel te selecteren.
 x,y,w,h nemen waarden tussen 0 en 1 aan.
 x representeert de ratio ten opzichte van de linker zijde op de horizontale as.
@@ -59,7 +59,7 @@ class RijksRecord(BaseRecord):
     @property
     def img_url(self) -> str:
         return self.image_url.replace(
-            "/full/max/0/default.jpg", "/full/1024,/0/default.jpg"
+            "/full/max/0/default.jpg", "/full/!1024,/0/default.jpg"
         )
 
 
