@@ -40,14 +40,14 @@ class MomaRecord(BaseRecord):
     BeginDate: list[str]
     EndDate: list[str]
     Gender: list[str]
-    Date: str
-    Medium: str
-    Dimensions: str
-    CreditLine: str
+    Date: str | None
+    Medium: str | None
+    Dimensions: str | None
+    CreditLine: str | None
     AccessionNumber: str
     Classification: str
     Department: str
-    DateAcquired: str
+    DateAcquired: str | None
     Cataloged: str
     ObjectID: int
     URL: str

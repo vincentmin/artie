@@ -40,23 +40,25 @@ class TateRecord(BaseRecord):
     artistId: str
     title: str
     dateText: str
-    medium: str
-    creditLine: str
-    year: str
-    acquisitionYear: str
-    dimensions: str
-    width: str
-    height: str
-    depth: str
-    units: str
-    inscription: str
-    thumbnailCopyright: str
+    medium: str | None
+    creditLine: str | None
+    year: str | None
+    acquisitionYear: str | None
+    dimensions: str | None
+    width: str | None
+    height: str | None
+    depth: str | None
+    units: str | None
+    inscription: str | None
+    thumbnailCopyright: str | None
     thumbnailUrl: str
     url: str
 
     @property
     def img_url(self) -> str:
-        return self.thumbnailUrl
+        """Tate seems to have updated the URLs to end with _10 instead of _8.
+        This is likely to happen again at some point in the future."""
+        return self.thumbnailUrl.replace("_8.jpg", "_10.jpg")
 
 
 def dataset() -> Iterator[TateRecord]:
