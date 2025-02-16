@@ -25,7 +25,7 @@ gcloud artifacts repositories create artie \
 
 gcloud auth configure-docker us-central1-docker.pkg.dev
 docker build --target=runtime . -t us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest
-docker push us-central1-docker.pkg.dev/artie-450714/artie:latest
+docker push us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest
 
 gcloud run deploy langchain-chat-app --image=us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest \
     --region=us-central1 \
