@@ -12,7 +12,8 @@ side_bar_prompt = """Hier is het kunstwerk van het Rijks Museum dat we vandaag b
 - **Artiest**: [{artist_name}]({artist_uri})
 - **Beschrijving**: {description}
 
-Hier is een afbeelding van het kunstwerk. Je kan er op klikken om hem in het groot te zien."""
+Hier is een afbeelding van het kunstwerk. Je kan er op klikken om hem in het groot te zien.
+Selecteer een ander chat profiel om van museum of taal te veranderen en herlaad de pagina om een nieuw kunstwerk te bespreken."""
 
 # for llm
 init_conversation_prompt = """Hier is het kunstwerk van het Rijks Museum dat we vandaag bespreken:

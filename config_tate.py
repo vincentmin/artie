@@ -12,7 +12,8 @@ side_bar_prompt = """Here's the art piece from the Tate that we are discussing t
 - **Artist**: {artist}
 - **Tate link**: {url}
 
-Here is the image of the art piece. You can click on it to enlarge it."""
+Here is the image of the art piece. You can click on it to enlarge it.
+Select another chat profile to switch museums or language and refresh the page to get a new art piece."""
 
 # for llm
 init_conversation_prompt = """Here's the art piece from the Tate that we are discussing today:
