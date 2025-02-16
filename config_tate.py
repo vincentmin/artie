@@ -57,9 +57,7 @@ class TateRecord(BaseRecord):
 
     @property
     def img_url(self) -> str:
-        """Tate seems to have updated the URLs to end with _10 instead of _8.
-        This is likely to happen again at some point in the future."""
-        return self.thumbnailUrl.replace("_8.jpg", "_10.jpg")
+        return self.thumbnailUrl
 
 
 def dataset() -> Iterator[TateRecord]:

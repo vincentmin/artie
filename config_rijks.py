@@ -58,7 +58,7 @@ class RijksRecord(BaseRecord):
 
     @property
     def img_url(self) -> str:
-        return self.image_url
+        return self.image_url.replace("/full/max/0/default.jpg", "/full/1024,/0/default.jpg")
 
 
 def dataset() -> Iterator[RijksRecord]:
