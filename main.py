@@ -37,8 +37,8 @@ async def chat_profile():
             icon="https://iiif.micr.io/PJEZO/pct:0.56,0.48,0.11,0.1325/512,/0/default.jpg",
         ),
         cl.ChatProfile(
-            name="MOMA",
-            markdown_description="Talk to Artie about art pieces from the MOMA",
+            name="MoMA",
+            markdown_description="Talk to Artie about art pieces from the MoMA",
             icon="https://iiif.micr.io/PJEZO/pct:0.43,0.45,0.11,0.1325/512,/0/default.jpg",
         ),
         cl.ChatProfile(
@@ -54,13 +54,13 @@ async def on_chat_start():
     languages = cl.user_session.get("languages", "").split(";")
     language = languages[0] if languages else "en"
     default_chat_profile = (
-        "Rijks Museum" if "nl-BE" in language or "nl-NL" in language else "MOMA"
+        "Rijks Museum" if "nl-BE" in language or "nl-NL" in language else "MoMA"
     )
     chat_profile = cl.user_session.get("chat_profile", default_chat_profile)
     match chat_profile:
         case "Rijks Museum":
             config = rijks_config
-        case "MOMA":
+        case "MoMA":
             config = moma_config
         case "Tate":
             config = tate_config

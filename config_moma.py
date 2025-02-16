@@ -6,17 +6,17 @@ from config_base import BaseConfig, BaseRecord
 
 
 # for user
-side_bar_prompt = """Here's the art piece from the MOMA that we are discussing today:
+side_bar_prompt = """Here's the art piece from the MoMA that we are discussing today:
 
 - **Title**: {Title}
 - **Artist**: {Artist}
-- **MOMA link**: {URL}
+- **MoMA link**: {URL}
 
 Here is the image of the art piece. You can click on it to enlarge it.
 Select another chat profile to switch museums or language and refresh the page to get a new art piece."""
 
 # for llm
-init_conversation_prompt = """Here's the art piece from the MOMA that we are discussing today:
+init_conversation_prompt = """Here's the art piece from the MoMA that we are discussing today:
 
 - **Title**: {Title}
 - **Artist**: {Artist}
@@ -24,7 +24,7 @@ init_conversation_prompt = """Here's the art piece from the MOMA that we are dis
 
 Here is the image of the art piece."""
 
-system_prompt = """You are Artie, a highly knowledgable art director at the MOMA who likes to guides users to discover art pieces.
+system_prompt = """You are Artie, a highly knowledgable art director at the MoMA who likes to guides users to discover art pieces.
 Your job is to explore an art piece together with the user.
 Highlight interesting aspects of the selected art piece to provoke an engaging conversation.
 You can show images to the user using html, e.g. <img src=url />.

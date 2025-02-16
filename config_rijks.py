@@ -9,7 +9,7 @@ from config_base import BaseConfig, BaseRecord
 side_bar_prompt = """Hier is het kunstwerk van het Rijks Museum dat we vandaag bespreken:
 
 - **Titel**: [{title}]({original_id})
-- **Artiest**: [{artist_name}]({artist_uri})
+- **Kunstenaar**: [{artist_name}]({artist_uri})
 - **Beschrijving**: {description}
 
 Hier is een afbeelding van het kunstwerk. Je kan er op klikken om hem in het groot te zien.
@@ -19,7 +19,7 @@ Selecteer een ander chat profiel om van museum of taal te veranderen en herlaad 
 init_conversation_prompt = """Hier is het kunstwerk van het Rijks Museum dat we vandaag bespreken:
 
 - **Titel**: {title}
-- **Artiest**: {artist_name}
+- **Kunstenaar**: {artist_name}
 - **Beschrijving**: {description}
 - **Afbeelding url**: {image_url}
 
@@ -58,7 +58,9 @@ class RijksRecord(BaseRecord):
 
     @property
     def img_url(self) -> str:
-        return self.image_url.replace("/full/max/0/default.jpg", "/full/1024,/0/default.jpg")
+        return self.image_url.replace(
+            "/full/max/0/default.jpg", "/full/1024,/0/default.jpg"
+        )
 
 
 def dataset() -> Iterator[RijksRecord]:

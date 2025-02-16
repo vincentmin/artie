@@ -60,7 +60,7 @@ name = "Artie"
 # layout = "wide"
 
 # Description of the assistant. This is used for HTML tags.
-description = "A chatbot on art pieces from the Rijks, MOMA and Tate museums"
+description = "A chatbot on art pieces from the Rijks, MoMA and Tate museums"
 
 # Chain of Thought (CoT) display mode. Can be "hidden", "tool_call" or "full".
 cot = "full"
