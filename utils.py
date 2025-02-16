@@ -16,11 +16,12 @@ async def _load_image(url: str) -> Image.Image:
             return image
 
 
-async def load_image(url: str, res: int | None = 1024 ) -> Image.Image:
+async def load_image(url: str, res: int | None = 1024) -> Image.Image:
     """Load an image. The image will be resized such that max(w,h)=1024 while keeping the aspect ratio"""
     # micrio images can be downloaded in a desired resolution to improve download speed
     img = await _load_image(url)
-    img.thumbnail((res, res))
+    if res is not None:
+        img.thumbnail((res, res))
     return img
 
 
