@@ -67,8 +67,8 @@ def dataset() -> Iterator[RijksRecord]:
             for record in load_dataset(
                 "vincentmin/rijksmuseum-oai", streaming=True, split="train"
             )
-            .shuffle()
             .filter(lambda record: not any(v is None for v in record.values()))
+            .shuffle()
         )
         for record in finite_dataset:
             yield record

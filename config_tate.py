@@ -67,7 +67,6 @@ def dataset() -> Iterator[TateRecord]:
         finite_dataset: Iterator[TateRecord] = iter(
             TateRecord.from_dict(record)
             for record in load_dataset("vincentmin/tate", streaming=True, split="train")
-            .shuffle()
             .filter(
                 lambda record: (
                     record.get("thumbnailUrl", False)
@@ -76,6 +75,7 @@ def dataset() -> Iterator[TateRecord]:
                     and record.get("url", False)
                 )
             )
+            .shuffle()
         )
         for record in finite_dataset:
             yield record

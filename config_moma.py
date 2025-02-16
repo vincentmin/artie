@@ -65,7 +65,6 @@ def dataset() -> Iterator[MomaRecord]:
         finite_dataset: Iterator[MomaRecord] = iter(
             MomaRecord.from_dict(record)
             for record in load_dataset("vincentmin/moma", streaming=True, split="train")
-            .shuffle()
             .filter(
                 lambda record: (
                     record.get("Title", False)
@@ -74,6 +73,7 @@ def dataset() -> Iterator[MomaRecord]:
                     and record.get("URL", False)
                 )
             )
+            .shuffle()
         )
         for record in finite_dataset:
             yield record
