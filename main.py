@@ -1,7 +1,16 @@
 import chainlit as cl
 from google import genai
 from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
-from utils import respond, display_sidebar, initiate_conversation, get_config
+from utils import respond, display_sidebar, initiate_conversation
+from config_rijks import RijksConfig
+from config_moma import MomaConfig
+from config_tate import TateConfig
+
+# Instantiate configs only once for memory efficiency
+rijks_config = RijksConfig()
+moma_config = MomaConfig()
+tate_config = TateConfig()
+
 
 client = genai.Client()
 model_id = "gemini-2.0-flash-001"
@@ -42,8 +51,21 @@ async def chat_profile():
 
 @cl.on_chat_start
 async def on_chat_start():
-    chat_profile = cl.user_session.get("chat_profile")
-    config = get_config(chat_profile)
+    languages = cl.user_session.get("languages", "").split(";")
+    language = languages[0] if languages else "en"
+    default_chat_profile = (
+        "Rijks Museum" if "nl-BE" in language or "nl-NL" in language else "MOMA"
+    )
+    chat_profile = cl.user_session.get("chat_profile", default_chat_profile)
+    match chat_profile:
+        case "Rijks Museum":
+            config = rijks_config
+        case "MOMA":
+            config = moma_config
+        case "Tate":
+            config = tate_config
+        case _:
+            raise ValueError(f"Invalid chat profile: {chat_profile}")
 
     # instantiate chat session to keep track of conversation
     chat = client.aio.chats.create(

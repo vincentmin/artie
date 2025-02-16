@@ -5,29 +5,7 @@ import io
 import chainlit as cl
 from google.genai.types import PartUnionDict, GenerateContentResponse
 from google.genai.chats import AsyncChat
-from config_base import BaseRecord, BaseConfig
-from config_rijks import RijksConfig
-from config_moma import MomaConfig
-from config_tate import TateConfig
-
-# Instantiate configs only once for memory efficiency
-rijks_config = RijksConfig()
-moma_config = MomaConfig()
-tate_config = TateConfig()
-
-
-def get_config(chat_profile: str | None) -> BaseConfig:
-    match chat_profile:
-        case None:
-            return rijks_config
-        case "Rijks Museum":
-            return rijks_config
-        case "MOMA":
-            return moma_config
-        case "Tate":
-            return tate_config
-        case _:
-            raise ValueError(f"Invalid chat_profile: {chat_profile}")
+from config_base import BaseRecord
 
 
 async def _load_image(url: str) -> Image.Image:
