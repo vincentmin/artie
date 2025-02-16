@@ -1,6 +1,6 @@
-docker build --target=runtime . -t artie
-docker tag artie:latest us-central1-docker.pkg.dev/artie-450714/artie/artie-image:
-latest
+docker build --target=runtime . -t artie:latest
+docker tag artie:latest us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest
+
 # Optionally push to ghcr.io
 #docker tag artie:latest ghcr.io/vincentmin/artie/artie:latest
 #docker push ghcr.io/vincentmin/artie/artie:latest
@@ -24,10 +24,10 @@ gcloud artifacts repositories create artie \
     --async
 
 gcloud auth configure-docker us-central1-docker.pkg.dev
-docker build --target=runtime . -t us-central1-docker.pkg.dev/artie-450714/artie:latest
+docker build --target=runtime . -t us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest
 docker push us-central1-docker.pkg.dev/artie-450714/artie:latest
 
-gcloud run deploy langchain-chat-app --image=us-central1-docker.pkg.dev/artie-450714/artie:latest \
+gcloud run deploy langchain-chat-app --image=us-central1-docker.pkg.dev/artie-450714/artie/artie-image:latest \
     --region=us-central1 \
     --service-account=artie-rijks-museum@artie-450714.iam.gserviceaccount.com \
     --port=8000
