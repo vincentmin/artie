@@ -11,8 +11,8 @@ class BaseRecord:
         raise NotImplementedError
 
 
-class BaseConfig:
-    dataset: Iterator[BaseRecord]
+class BaseConfig[T: BaseRecord]:
+    dataset: Iterator[T]
     side_bar_prompt: str
     init_conversation_prompt: str
     system_prompt: str
