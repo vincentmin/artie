@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
+from utils import create_infinite_dataset
 
 
 # for user
@@ -64,23 +65,19 @@ class RijksRecord(BaseRecord):
 
 
 def dataset() -> Iterator[RijksRecord]:
-    """We need to loop infinitely to avoid StopIteration errors"""
-    while True:
-        finite_dataset: Iterator[RijksRecord] = iter(
-            RijksRecord.from_dict(record)
-            for record in load_dataset(
-                "vincentmin/rijksmuseum-oai", streaming=True, split="train"
-            )
-            .filter(lambda record: not any(v is None for v in record.values()))
-            .shuffle()
+    return iter(
+        RijksRecord.from_dict(record)
+        for record in load_dataset(
+            "vincentmin/rijksmuseum-oai", streaming=True, split="train"
         )
-        for record in finite_dataset:
-            yield record
+        .filter(lambda record: not any(v is None for v in record.values()))
+        .shuffle()
+    )
 
 
 @dataclass
 class RijksConfig(BaseConfig):
-    dataset: Iterator[RijksRecord] = dataset()
+    dataset: Iterator[RijksRecord] = create_infinite_dataset(dataset)
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt

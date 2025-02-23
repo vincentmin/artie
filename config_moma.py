@@ -3,14 +3,13 @@ from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
-
+from utils import create_infinite_dataset
 
 # for user
 side_bar_prompt = """Here's the art piece from the MoMA that we are discussing today:
 
-- **Title**: {Title}
+- **Title**: [{Title}]({URL})
 - **Artist**: {Artist}
-- **MoMA link**: {URL}
 
 Here is the image of the art piece. You can click on it to enlarge it.
 Select another chat profile to switch museums or language and refresh the page to get a new art piece."""
@@ -61,28 +60,24 @@ class MomaRecord(BaseRecord):
 
 
 def dataset() -> Iterator[MomaRecord]:
-    """We need to loop infinitely to avoid StopIteration errors"""
-    while True:
-        finite_dataset: Iterator[MomaRecord] = iter(
-            MomaRecord.from_dict(record)
-            for record in load_dataset("vincentmin/moma", streaming=True, split="train")
-            .filter(
-                lambda record: (
-                    record.get("Title", False)
-                    and record.get("Artist", False)
-                    and record.get("ImageURL", False)
-                    and record.get("URL", False)
-                )
+    return iter(
+        MomaRecord.from_dict(record)
+        for record in load_dataset("vincentmin/moma", streaming=True, split="train")
+        .filter(
+            lambda record: (
+                record.get("Title", False)
+                and record.get("Artist", False)
+                and record.get("ImageURL", False)
+                and record.get("URL", False)
             )
-            .shuffle()
         )
-        for record in finite_dataset:
-            yield record
+        .shuffle()
+    )
 
 
 @dataclass
 class MomaConfig(BaseConfig):
-    dataset: Iterator[MomaRecord] = dataset()
+    dataset: Iterator[MomaRecord] = create_infinite_dataset(dataset)
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt
