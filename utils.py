@@ -35,8 +35,17 @@ async def _load_image(url: str) -> Image.Image:
 
 async def load_image(url: str, res: int | None = 1024) -> Image.Image:
     """Load an image. The image will be resized such that max(w,h)=1024 while keeping the aspect ratio"""
-    # micrio images can be downloaded in a desired resolution to improve download speed
-    img = await _load_image(url)
+    # _10 is highest resolution but is not always available, so we try lower resolutions. Only applies tot Tate.
+    try:
+        img = await _load_image(url)
+    except Exception:
+        try:
+            img = await _load_image(url.replace("_10.jpg", "_9.jpg"))
+        except Exception:
+            try:
+                img = await _load_image(url.replace("_10.jpg", "_8.jpg"))
+            except Exception as e:
+                logger.error(f"Error loading image: {e}")
     if res is not None:
         img.thumbnail((res, res))
     return img
