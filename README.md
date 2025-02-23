@@ -12,7 +12,6 @@ Observing art by myself can be nice, but experiencing a piece with friends or fa
 
 ## Technologies
 
-Find the code here: https://github.com/vincentmin/artie
 I used the following excellent technologies to build this experience:
 
 - [Rijks Museum OAI-PMH API](https://data.rijksmuseum.nl/docs/) The art pieces that you can discover with Artie originate from the Rijks Museum data API. Thanks so much to the Rijks Museum for making this so freely accessible!
