@@ -4,6 +4,7 @@ Have a chat with Artie and explore the art world together.
 With each conversation, Artie will take you on a journey into a random art piece from the Rijks Museum.
 Talk about the history that lies behind an object, discuss the events that led the artist to create this painting, or ask Artie what he thinks about a particular feature of the image.
 Artie is here to discover the Rijks Museum together with you.
+Try it out here: [artie.vincentmin.com](https://artie.vincentmin.com/)
 
 ## About
 
