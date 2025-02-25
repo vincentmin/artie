@@ -79,7 +79,7 @@ async def on_chat_start():
     cl.user_session.set("chat", chat)
 
     # fetch random record
-    record = next(config.dataset)
+    record = config.get_next_record()
 
     await display_sidebar(record, config.side_bar_prompt)
     await initiate_conversation(record, config.init_conversation_prompt)

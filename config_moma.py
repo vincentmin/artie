@@ -3,7 +3,6 @@ from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
-from utils import create_infinite_dataset
 
 # for user
 side_bar_prompt = """Here's the art piece from the MoMA that we are discussing today:
@@ -59,25 +58,24 @@ class MomaRecord(BaseRecord):
         return self.ImageURL
 
 
-def dataset() -> Iterator[MomaRecord]:
-    return iter(
-        MomaRecord.from_dict(record)
-        for record in load_dataset("vincentmin/moma", streaming=True, split="train")
-        .filter(
-            lambda record: (
-                record.get("Title", False)
-                and record.get("Artist", False)
-                and record.get("ImageURL", False)
-                and record.get("URL", False)
-            )
-        )
-        .shuffle()
-    )
-
-
 @dataclass
 class MomaConfig(BaseConfig):
-    dataset: Iterator[MomaRecord] = create_infinite_dataset(dataset)
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt
+
+    @staticmethod
+    def get_dataset() -> Iterator[MomaRecord]:
+        return iter(
+            MomaRecord.from_dict(record)
+            for record in load_dataset("vincentmin/moma", streaming=True, split="train")
+            .filter(
+                lambda record: (
+                    record.get("Title", False)
+                    and record.get("Artist", False)
+                    and record.get("ImageURL", False)
+                    and record.get("URL", False)
+                )
+            )
+            .shuffle()
+        )

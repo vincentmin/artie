@@ -3,7 +3,6 @@ from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 from datasets import load_dataset
 from config_base import BaseConfig, BaseRecord
-from utils import create_infinite_dataset
 
 # for user
 side_bar_prompt = """Here's the art piece from the Tate that we are discussing today:
@@ -59,25 +58,24 @@ class TateRecord(BaseRecord):
         return self.thumbnailUrl
 
 
-def dataset() -> Iterator[TateRecord]:
-    return iter(
-        TateRecord.from_dict(record)
-        for record in load_dataset("vincentmin/tate", streaming=True, split="train")
-        .filter(
-            lambda record: (
-                record.get("thumbnailUrl", False)
-                and record.get("artist", False)
-                and record.get("title", False)
-                and record.get("url", False)
-            )
-        )
-        .shuffle()
-    )
-
-
 @dataclass
 class TateConfig(BaseConfig):
-    dataset: Iterator[TateRecord] = create_infinite_dataset(dataset)
     side_bar_prompt: str = side_bar_prompt
     init_conversation_prompt: str = init_conversation_prompt
     system_prompt: str = system_prompt
+
+    @staticmethod
+    def get_dataset() -> Iterator[TateRecord]:
+        return iter(
+            TateRecord.from_dict(record)
+            for record in load_dataset("vincentmin/tate", streaming=True, split="train")
+            .filter(
+                lambda record: (
+                    record.get("thumbnailUrl", False)
+                    and record.get("artist", False)
+                    and record.get("title", False)
+                    and record.get("url", False)
+                )
+            )
+            .shuffle()
+        )

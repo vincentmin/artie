@@ -1,5 +1,4 @@
-from typing import cast, Callable, Iterator
-import logging
+from typing import cast
 from PIL import Image
 import aiohttp
 import io
@@ -9,20 +8,6 @@ from google.genai.chats import AsyncChat
 from google.genai.errors import APIError
 from config_base import BaseRecord
 
-logger = logging.getLogger(__name__)
-
-
-def create_infinite_dataset[T: BaseRecord](
-    finite_dataset: Callable[[], Iterator[T]],
-) -> Iterator[T]:
-    """Loop infinitely to avoid StopIteration errors"""
-    try:
-        while True:
-            for record in finite_dataset():
-                yield record
-    except Exception as e:
-        logger.error(f"Encountered error in dataset: {e}")
-        create_infinite_dataset(finite_dataset)
 
 
 async def _load_image(url: str) -> Image.Image:
