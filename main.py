@@ -87,4 +87,9 @@ async def on_chat_start():
 
 @cl.on_message
 async def main(message: cl.Message):
+    chat = cl.user_session.get("chat")
+    if not chat:
+        return await cl.Message(
+            content="Artie is inspecting the art piece and should soon send you his thoughts. Please be patient until then. You can refresh the page if Artie is taking too long."
+        ).send()
     await respond(message.content)

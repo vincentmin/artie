@@ -1,4 +1,5 @@
 from typing import cast
+import logging
 from PIL import Image
 import aiohttp
 import io
@@ -8,6 +9,8 @@ from google.genai.chats import AsyncChat
 from google.genai.errors import APIError
 from config_base import BaseRecord
 
+
+logger = logging.getLogger(__name__)
 
 
 async def _load_image(url: str) -> Image.Image:
